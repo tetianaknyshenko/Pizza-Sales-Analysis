@@ -1,0 +1,34 @@
+name: Spark CI/CD Pipeline 
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 🚀 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🔧 Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+
+      - name: 🔥 Install Dependencies
+        run: |
+          pip install pyspark xgboost seaborn matplotlib pandas numpy
+
+      - name: ✅ Run Spark Tests
+        run: |
+          python tests/test_spark.py
+
+      - name: 🚀 Deploy (Optional)
+        if: success()
+        run: |
+          echo "Deployment step goes here (e.g., upload model to cloud)"
